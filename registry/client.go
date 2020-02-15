@@ -196,7 +196,9 @@ func (c *Client) Repositories(useCache bool) map[string][]string {
 				namespace = f[0]
 				repo = f[1]
 			}
-			c.repos[namespace] = append(c.repos[namespace], repo)
+			if len(c.Tags(r.String())) > 0 {
+				c.repos[namespace] = append(c.repos[namespace], repo)
+			}
 		}
 
 		// pagination
@@ -269,7 +271,9 @@ func (c *Client) CountTags(interval uint8) {
 				if n != "library" {
 					repoPath = fmt.Sprintf("%s/%s", n, r)
 				}
-				c.tagCounts[fmt.Sprintf("%s/%s", n, r)] = len(c.Tags(repoPath))
+				if len(c.Tags(repoPath)) > 0 {
+					c.tagCounts[fmt.Sprintf("%s/%s", n, r)] = len(c.Tags(repoPath))
+				}
 			}
 		}
 		c.logger.Info("Tags calculation complete.")
