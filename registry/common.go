@@ -2,6 +2,7 @@ package registry
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 
@@ -16,7 +17,11 @@ func SetupLogging(name string) logging.Logger {
 	dateFormat := "%Y-%m-%d %H:%M:%S"
 	formatter := logging.NewStandardFormatter(format, dateFormat)
 	handler.SetFormatter(formatter)
-	logger.SetLevel(logging.LevelInfo)
+	if os.Getenv("DEBUG") == "1" {
+		logger.SetLevel(logging.LevelDebug)
+	} else {
+		logger.SetLevel(logging.LevelInfo)
+	}
 	logger.AddHandler(handler)
 	return logger
 }
